@@ -25,6 +25,10 @@
       "description": "Get your api hash from http://my.telegram.org/",
       "value": "xxxxxxxxxxxx"
     },
+    "ALD_USR": {
+      "description": "Allow user and group. separate with space",
+      "value": ""
+    },
     "API_ID": {
       "description": "Get your api id from http://my.telegram.org/",
       "value": "xxxxxxxx"
