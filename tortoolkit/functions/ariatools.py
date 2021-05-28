@@ -5,28 +5,84 @@ import asyncio, aria2p, logging, os
 from ..core.getVars import get_val
 from telethon.tl.types import KeyboardButtonCallback
 from telethon.errors.rpcerrorlist import MessageNotModifiedError
+import requests
 
 # referenced from public leech
 # pylint: disable=no-value-for-parameter
 torlog = logging.getLogger(__name__)
 
+def KopyasizListe(string):
+    kopyasiz = list(string.split(","))
+    kopyasiz = list(dict.fromkeys(kopyasiz))
+    return kopyasiz
+
+
+def Virgullustring(string):
+    string = string.replace("\n\n", ",")
+    string = string.replace("\n", ",")
+    string = string.replace(",,", ",")
+    string = string.rstrip(',')
+    string = string.lstrip(',')
+    return string
+
+
+tracker_urlsss = [
+    "https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt",
+    "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt",
+    "https://raw.githubusercontent.com/DeSireFire/animeTrackerList/master/AT_all.txt"
+]
+tumtorrenttrackerstringi = ""
+sonstringtrckr = ""
+for i in range(len(tracker_urlsss)):
+    response = requests.get(tracker_urlsss[i])
+    response.encoding = "utf-8"
+    tumtorrenttrackerstringi += "\n"
+    tumtorrenttrackerstringi += response.text
+trackerlistemiz = KopyasizListe(Virgullustring(tumtorrenttrackerstringi))
+sonstringtrckr = ','.join(trackerlistemiz)
+# LOGGER.info(sonstringtrckr)
+# trackelreri alıyoz dinamik olarak
+
+
 async def aria_start():
+    global sonstringtrckr
     aria2_daemon_start_cmd = []
     # start the daemon, aria2c command
     aria2_daemon_start_cmd.append("aria2c")
-    # aria2_daemon_start_cmd.append("--allow-overwrite=true")
+    aria2_daemon_start_cmd.append("--allow-overwrite=true")
     aria2_daemon_start_cmd.append("--daemon=true")
-    aria2_daemon_start_cmd.append("--enable-rpc")
+    aria2_daemon_start_cmd.append("--check-certificate=false")
+    aria2_daemon_start_cmd.append("--enable-dht")
+    aria2_daemon_start_cmd.append("--dht-listen-port=6881")
+    aria2_daemon_start_cmd.append("--follow-metalink=mem")
+    aria2_daemon_start_cmd.append("--bt-max-peers=0")
+    aria2_daemon_start_cmd.append("--seed-time=0.01")
+    aria2_daemon_start_cmd.append("--min-split-size=10M")
+    aria2_daemon_start_cmd.append("--peer-id-prefix=-qB4341-")
+    aria2_daemon_start_cmd.append("--user-agent=qBittorrent/4.3.4.1")
+    aria2_daemon_start_cmd.append("--disk-cache=64M")
+    aria2_daemon_start_cmd.append("--file-allocation=prealloc")
+    aria2_daemon_start_cmd.append("--continue=true")
+    aria2_daemon_start_cmd.append("--bt-request-peer-speed-limit=2048K")
+    aria2_daemon_start_cmd.append("--auto-file-renaming=true")
+    aria2_daemon_start_cmd.append("--max-tries=20")
+    aria2_daemon_start_cmd.append("--bt-enable-lpd=true")
+    aria2_daemon_start_cmd.append("--seed-ratio=0.0")
+    aria2_daemon_start_cmd.append("--content-disposition-default-utf8=true")
+    aria2_daemon_start_cmd.append("--http-accept-gzip=true")
+    aria2_daemon_start_cmd.append("--reuse-uri=true")
+    aria2_daemon_start_cmd.append("--max-file-not-found=5")
     aria2_daemon_start_cmd.append("--follow-torrent=mem")
     aria2_daemon_start_cmd.append("--max-connection-per-server=10")
     aria2_daemon_start_cmd.append("--min-split-size=10M")
+    aria2_daemon_start_cmd.append("--enable-rpc")
     aria2_daemon_start_cmd.append("--rpc-listen-all=false")
-    aria2_daemon_start_cmd.append(f"--rpc-listen-port=8100")
+    aria2_daemon_start_cmd.append("--rpc-listen-port=6800")
     aria2_daemon_start_cmd.append("--rpc-max-request-size=1024M")
-    aria2_daemon_start_cmd.append("--seed-ratio=0.0")
-    aria2_daemon_start_cmd.append("--seed-time=1")
+    aria2_daemon_start_cmd.append("--seed-time=0")
+    aria2_daemon_start_cmd.append("--max-overall-upload-limit=1K")
     aria2_daemon_start_cmd.append("--split=10")
-    aria2_daemon_start_cmd.append(f"--bt-stop-timeout=100")
+    aria2_daemon_start_cmd.append(f"--bt-tracker={sonstringtrckr}")
     #
     torlog.debug(aria2_daemon_start_cmd)
     #
