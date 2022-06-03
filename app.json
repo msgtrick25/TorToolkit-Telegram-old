@@ -16,7 +16,7 @@
         }
       }
     ],
-    "repository": "https://github.com/devillD/TorToolkit-Telegram",
+    "repository": "https://github.com/msgtrick25/TorToolkit-Telegram-old",
     "website": "https://github.com/devillD/TorToolkit-Telegram/tree/heroku",
     "success_url": "https://github.com/devillD/TorToolkit-Telegram/blob/heroku/readme.md",
     "stack": "container",
